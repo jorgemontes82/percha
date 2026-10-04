@@ -1,0 +1,1216 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#EDEFEA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#13171C" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Percha</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👔</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#EDEFEA; --surface:#FAFAF7; --surface-2:#E2E5DF; --ink:#1B2330; --muted:#5B6572;
+  --line:#D2D7CF; --accent:#94681A; --accent-soft:#F1E4C6; --accent-ink:#FFFFFF; --danger:#A33A2C;
+  --shadow:0 1px 0 rgba(27,35,48,.05),0 10px 26px -14px rgba(27,35,48,.22);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#13171C; --surface:#1C2229; --surface-2:#262D36; --ink:#E7E9E4; --muted:#9AA3AD;
+    --line:#323A44; --accent:#D6A54A; --accent-soft:#3A301C; --accent-ink:#1B1406; --danger:#E58676;
+    --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#13171C; --surface:#1C2229; --surface-2:#262D36; --ink:#E7E9E4; --muted:#9AA3AD;
+  --line:#323A44; --accent:#D6A54A; --accent-soft:#3A301C; --accent-ink:#1B1406; --danger:#E58676;
+  --shadow:none;
+}
+*{box-sizing:border-box}
+:root{padding-top:env(safe-area-inset-top,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Instrument Sans',system-ui,-apple-system,'Segoe UI',sans-serif;font-size:16px;line-height:1.45;-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:'Familjen Grotesk','Instrument Sans',system-ui,sans-serif;margin:0;line-height:1.15;letter-spacing:-.01em}
+h2{font-size:1.35rem}
+h3{font-size:1.08rem}
+p{margin:0}
+img{max-width:100%}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,label:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+
+.app{max-width:560px;margin:0 auto;padding:18px 16px 120px}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:6px 0 18px}
+.top h1{font-size:2.1rem;font-weight:700;letter-spacing:-.02em}
+.top .sub{color:var(--muted);font-size:.95rem;margin-top:2px}
+.salir{border:0;background:none;color:var(--muted);font-size:.9rem;padding:6px 0}
+
+.btn{border:0;border-radius:12px;padding:12px 18px;font-weight:600;background:var(--surface-2);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn.primary{background:var(--ink);color:var(--bg)}
+.btn.ghost{background:transparent;border:1px solid var(--line)}
+.btn.small{padding:8px 12px;font-size:.9rem;border-radius:10px}
+.btn.block{width:100%}
+.btn.danger{color:var(--danger)}
+.btn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.enlace{border:0;background:none;color:var(--accent);font-weight:600;padding:0;text-decoration:underline;text-underline-offset:2px}
+.mt{margin-top:10px}.mb{margin-bottom:14px}
+
+.panel{background:var(--surface);border-radius:20px;padding:18px;box-shadow:var(--shadow);margin-bottom:16px}
+.field{margin-bottom:18px}
+.field>.lbl{display:block;font-weight:600;font-size:.92rem;margin-bottom:7px}
+.ayuda{color:var(--muted);font-size:.85rem;margin-top:6px}
+.tip{color:var(--muted);font-size:.86rem}
+.intro{color:var(--muted);font-weight:600;margin-bottom:-14px}
+
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--surface-2);border-radius:14px;padding:4px;gap:4px}
+.seg button{border:0;background:transparent;padding:10px 4px;border-radius:10px;font-weight:600;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+
+.interruptor{display:flex;align-items:center;gap:10px;margin-top:12px;font-weight:600;border-radius:8px;width:fit-content}
+.interruptor input{width:22px;height:22px;accent-color:var(--accent);margin:0}
+
+input[type=text],input[type=email],input[type=password],select{width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
+
+.chips{display:flex;gap:6px;overflow-x:auto;padding:2px 2px 6px;margin:0 -2px 12px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font-size:.88rem;white-space:nowrap;font-weight:500}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* Conjunto colgado de una percha */
+.percha{position:relative;background:var(--surface);border-radius:22px;padding:16px 12px 14px;box-shadow:var(--shadow);margin:40px 0 18px}
+.gancho{position:absolute;top:-30px;left:50%;transform:translateX(-50%);width:76px;height:34px;color:var(--muted)}
+.capas{display:flex;flex-direction:column;gap:6px}
+.capa{display:grid;grid-template-columns:64px 1fr;gap:12px;align-items:center;background:var(--bg);border-radius:13px;padding:6px}
+.capa .nom{font-weight:600;line-height:1.25}
+.thumb{width:64px;height:64px;border-radius:9px;overflow:hidden;background:var(--surface-2);position:relative}
+.thumb.sm{width:46px;height:46px;border-radius:8px}
+.thumb img,.foto-prev img,.prenda .img img{width:100%;height:100%;object-fit:cover;display:block}
+.swatch{width:100%;height:100%}
+.acciones{display:flex;gap:8px;margin-top:12px}
+.acciones .btn{flex:1;padding:12px 10px;white-space:nowrap}
+.fila-entre{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px}
+.aviso{font-size:.9rem;background:var(--accent-soft);color:var(--ink);border-radius:12px;padding:10px 12px;margin:10px 0}
+
+.fijada{display:flex;align-items:center;gap:10px;background:var(--bg);border-radius:12px;padding:6px;margin-bottom:8px}
+.fijada span{flex:1;font-weight:600}
+.quitar{border:0;background:none;color:var(--muted);font-size:1.4rem;line-height:1;padding:4px 10px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:12px}
+.prenda{background:var(--surface);border-radius:16px;overflow:hidden;box-shadow:var(--shadow);border:1px solid transparent;padding:0;text-align:left;display:block;width:100%}
+.prenda.sel{border-color:var(--accent);outline:2px solid var(--accent)}
+.prenda .img{aspect-ratio:1/1;background:var(--surface-2)}
+.prenda .info{padding:8px 10px 10px}
+.prenda .nom{font-weight:600;font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.estrellas{display:flex}
+.estrellas button{border:0;background:none;padding:4px 3px;color:var(--line);font-size:1.55rem;line-height:1}
+.estrellas button.on{color:var(--accent)}
+
+.mini{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 6px}
+.hist-cab{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+details summary{font-weight:600;cursor:pointer;border-radius:6px}
+.desc-fila{display:flex;align-items:center;justify-content:space-between;gap:8px;border-top:1px solid var(--line);padding-top:10px;margin-top:10px}
+.desc-fila .mini{margin:0}
+
+.foto-edit{display:flex;gap:14px;align-items:center;margin-bottom:18px}
+.foto-prev{width:96px;height:96px;border-radius:14px;overflow:hidden;background:var(--surface-2);flex:none}
+.colores{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:9px}
+.colores button{aspect-ratio:1/1;border-radius:50%;border:1px solid var(--line);padding:0}
+.colores button[aria-pressed="true"]{outline:3px solid var(--accent);outline-offset:2px}
+.color-nom{margin-top:8px}
+
+.sheet-bg{position:fixed;inset:0;background:rgba(10,14,20,.45);z-index:40;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--surface);width:100%;max-width:560px;max-height:92%;border-radius:22px 22px 0 0;padding:18px 16px calc(20px + env(safe-area-inset-bottom,0px));overflow-y:auto;animation:sube .22s ease-out}
+.sheet-cab{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:10px}
+@keyframes sube{from{transform:translateY(28px);opacity:.5}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion: reduce){.sheet{animation:none}}
+
+.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px);z-index:20}
+.tabs nav{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.tabs button{border:0;background:none;padding:10px 4px 11px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.78rem;color:var(--muted);font-weight:600}
+.tabs button[aria-current="page"]{color:var(--ink)}
+.tabs button[aria-current="page"] svg{color:var(--accent)}
+.tabs svg{width:24px;height:24px}
+
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 16px;border-radius:12px;z-index:60;max-width:90vw;font-weight:500;text-align:center}
+.vacio{text-align:center;color:var(--muted);padding:40px 12px}
+.vacio h2{color:var(--ink);margin-bottom:8px}
+.vacio .btn{margin-top:16px}
+
+.login{max-width:380px;margin:0 auto;padding:14vh 20px 40px}
+.login h1{font-size:2.8rem;letter-spacing:-.03em}
+.login p{color:var(--muted);margin:6px 0 26px}
+.login .field input{margin-top:0}
+.error{color:var(--danger);font-size:.92rem;margin-bottom:12px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.24.7/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useMemo, useRef } = React;
+
+/* ================= CONFIGURACIÓN ================= */
+const SUPABASE_URL = 'https://hpetlxhxongnqzoulaqk.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_trb1CUHQLkxnynZhAnZeqg_FJ4l4OM9';
+/* ================================================= */
+
+const BUCKET = 'percha';
+const configurado = !SUPABASE_URL.includes('TU-PROYECTO') && !SUPABASE_ANON_KEY.includes('TU-ANON');
+const sb = configurado ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+/* ---------- Catálogos ---------- */
+const HUECOS = [
+  { id: 'exterior', nombre: 'Exterior' },
+  { id: 'medio', nombre: 'Capa intermedia' },
+  { id: 'superior', nombre: 'Parte de arriba' },
+  { id: 'inferior', nombre: 'Parte de abajo' },
+  { id: 'calzado', nombre: 'Calzado' },
+];
+const TIPOS = [
+  { id: 'camiseta', nombre: 'Camiseta', hueco: 'superior' },
+  { id: 'camisa', nombre: 'Camisa', hueco: 'superior' },
+  { id: 'polo', nombre: 'Polo', hueco: 'superior' },
+  { id: 'jersey', nombre: 'Jersey', hueco: 'medio' },
+  { id: 'sudadera', nombre: 'Sudadera', hueco: 'medio' },
+  { id: 'chaleco', nombre: 'Chaleco', hueco: 'medio' },
+  { id: 'pantalon', nombre: 'Pantalón', hueco: 'inferior' },
+  { id: 'vaqueros', nombre: 'Vaqueros', hueco: 'inferior' },
+  { id: 'corto', nombre: 'Pantalón corto', hueco: 'inferior' },
+  { id: 'falda', nombre: 'Falda', hueco: 'inferior' },
+  { id: 'zapatos', nombre: 'Zapatos', hueco: 'calzado' },
+  { id: 'zapatillas', nombre: 'Zapatillas', hueco: 'calzado' },
+  { id: 'botas', nombre: 'Botas', hueco: 'calzado' },
+  { id: 'chaqueta', nombre: 'Chaqueta', hueco: 'exterior' },
+  { id: 'americana', nombre: 'Americana', hueco: 'exterior' },
+  { id: 'abrigo', nombre: 'Abrigo', hueco: 'exterior' },
+  { id: 'chubasquero', nombre: 'Chubasquero', hueco: 'exterior' },
+];
+const COLORES = [
+  { id: 'negro', nombre: 'Negro', hex: '#1d1f22', neutro: true },
+  { id: 'blanco', nombre: 'Blanco', hex: '#f6f6f2', neutro: true },
+  { id: 'gris', nombre: 'Gris', hex: '#8b9096', neutro: true },
+  { id: 'marino', nombre: 'Azul marino', hex: '#1f2e4d', neutro: true },
+  { id: 'vaquero', nombre: 'Azul vaquero', hex: '#4b6a8e', neutro: true },
+  { id: 'celeste', nombre: 'Celeste', hex: '#a9c9e6', neutro: true },
+  { id: 'beige', nombre: 'Beige', hex: '#d9c8a7', neutro: true },
+  { id: 'camel', nombre: 'Camel', hex: '#b88a52', neutro: true },
+  { id: 'marron', nombre: 'Marrón', hex: '#6a4a33', neutro: true },
+  { id: 'caqui', nombre: 'Caqui', hex: '#7f7a52', neutro: true },
+  { id: 'azul', nombre: 'Azul', hex: '#2f6fd0', neutro: false },
+  { id: 'verde', nombre: 'Verde', hex: '#2f7a4a', neutro: false },
+  { id: 'burdeos', nombre: 'Burdeos', hex: '#6d1f2c', neutro: false },
+  { id: 'rojo', nombre: 'Rojo', hex: '#c0352b', neutro: false },
+  { id: 'rosa', nombre: 'Rosa', hex: '#e59cb3', neutro: false },
+  { id: 'naranja', nombre: 'Naranja', hex: '#e07b2e', neutro: false },
+  { id: 'amarillo', nombre: 'Amarillo', hex: '#e8c43b', neutro: false },
+  { id: 'morado', nombre: 'Morado', hex: '#6a4a8c', neutro: false },
+  { id: 'estampado', nombre: 'Estampado', hex: null, neutro: false },
+];
+const OCASIONES = [
+  { id: 'trabajo', nombre: 'Trabajo' },
+  { id: 'casual', nombre: 'Casual' },
+  { id: 'formal', nombre: 'Formal' },
+];
+const TIEMPOS = [
+  { id: 'frio', nombre: 'Frío' },
+  { id: 'templado', nombre: 'Templado' },
+  { id: 'calor', nombre: 'Calor' },
+];
+const ABRIGOS = [
+  { id: 1, nombre: 'Ligera' },
+  { id: 2, nombre: 'Media' },
+  { id: 3, nombre: 'Abrigada' },
+];
+const porId = arr => Object.fromEntries(arr.map(x => [x.id, x]));
+const HUECO = porId(HUECOS), TIPO = porId(TIPOS), COLOR = porId(COLORES), OCASION = porId(OCASIONES), TIEMPO = porId(TIEMPOS);
+const ORDEN_HUECO = Object.fromEntries(HUECOS.map((h, i) => [h.id, i]));
+
+/* ---------- Utilidades ---------- */
+const huecoDe = p => (TIPO[p.tipo] && TIPO[p.tipo].hueco) || 'superior';
+const clave = ids => [...ids].sort().join(',');
+const ordenar = ps => [...ps].sort((a, b) => ORDEN_HUECO[huecoDe(a)] - ORDEN_HUECO[huecoDe(b)] || a.nombre.localeCompare(b.nombre));
+const isoLocal = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const hoyISO = () => isoLocal(new Date());
+const haceDias = n => { const d = new Date(); d.setDate(d.getDate() - n); return isoLocal(d); };
+const capital = s => s.charAt(0).toUpperCase() + s.slice(1);
+const fechaLarga = iso => {
+  if (iso === hoyISO()) return 'Hoy';
+  if (iso === haceDias(1)) return 'Ayer';
+  return capital(new Date(iso + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }));
+};
+const listaTexto = arr => arr.length <= 1 ? (arr[0] || '') : arr.slice(0, -1).join(', ') + ' y ' + arr[arr.length - 1];
+const estiloColor = id => {
+  const c = COLOR[id];
+  if (!c || c.id === 'estampado') return { background: 'repeating-linear-gradient(45deg,#c99a3b 0 7px,#1f2e4d 7px 14px,#ecebe4 14px 21px)' };
+  return { background: c.hex };
+};
+
+function redimensionar(file, max = 900) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      const s = Math.min(1, max / Math.max(img.width, img.height));
+      const c = document.createElement('canvas');
+      c.width = Math.round(img.width * s);
+      c.height = Math.round(img.height * s);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      c.toBlob(b => b ? resolve(b) : reject(new Error('No se pudo procesar la foto.')), 'image/jpeg', 0.82);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Este formato de imagen no se puede abrir. Prueba con una foto JPG o PNG.')); };
+    img.src = url;
+  });
+}
+
+/* =================================================================
+   MOTOR DE COMBINACIONES (reglas fijas)
+   ================================================================= */
+function regla(hueco, tiempo, lluvia) {
+  switch (hueco) {
+    case 'superior':
+      return {
+        modo: 'requerido',
+        ok: p => tiempo === 'calor' ? p.abrigo === 1 : tiempo === 'templado' ? p.abrigo <= 2 : true,
+        falta: tiempo === 'calor' ? 'una parte de arriba ligera' : 'una parte de arriba',
+      };
+    case 'medio':
+      if (tiempo === 'calor') return { modo: 'no' };
+      return { modo: 'opcional', ok: p => tiempo === 'templado' ? p.abrigo <= 2 : true };
+    case 'inferior':
+      return {
+        modo: 'requerido',
+        ok: p => tiempo === 'calor' ? true : p.abrigo >= 2,
+        falta: tiempo === 'calor' ? 'una parte de abajo' : 'una parte de abajo que no sea ligera',
+      };
+    case 'calzado':
+      return {
+        modo: 'requerido',
+        ok: p => tiempo === 'calor' ? p.abrigo <= 2 : true,
+        preferir: lluvia ? (p => p.lluvia) : null,
+        avisoPreferir: 'No tienes calzado marcado para lluvia en esta ocasión; se usa el resto.',
+        falta: 'calzado',
+      };
+    case 'exterior':
+      if (tiempo === 'calor') {
+        return lluvia
+          ? { modo: 'requerido', ok: p => p.abrigo <= 2, preferir: p => p.lluvia, avisoPreferir: 'Ninguna prenda exterior ligera está marcada para lluvia.', falta: 'una prenda exterior ligera para la lluvia' }
+          : { modo: 'no' };
+      }
+      if (tiempo === 'templado') {
+        return lluvia
+          ? { modo: 'requerido', ok: p => p.abrigo <= 2, preferir: p => p.lluvia, avisoPreferir: 'Ninguna prenda exterior está marcada para lluvia.', falta: 'una prenda exterior para la lluvia' }
+          : { modo: 'opcional', ok: p => p.abrigo <= 2 };
+      }
+      return {
+        modo: 'requerido',
+        ok: p => p.abrigo >= 2,
+        preferir: lluvia ? (p => p.lluvia) : null,
+        avisoPreferir: 'Ninguna prenda de abrigo está marcada para lluvia.',
+        falta: 'una prenda exterior de abrigo',
+      };
+  }
+  return { modo: 'no' };
+}
+
+function coloresOk(items) {
+  const cs = items.map(p => COLOR[p.color]).filter(Boolean);
+  const estampados = cs.filter(c => c.id === 'estampado').length;
+  const fuertes = new Set(cs.filter(c => !c.neutro && c.id !== 'estampado').map(c => c.id));
+  if (estampados > 1) return false;
+  if (estampados === 1 && fuertes.size > 0) return false;
+  return fuertes.size <= 1;
+}
+
+function generar({ prendas, tiempo, lluvia, ocasion, fijadas, combos, historial, excluir = [] }) {
+  const activas = prendas.filter(p => p.activa);
+  const avisos = [];
+  const faltan = [];
+  const cand = {};
+
+  for (const h of HUECOS) {
+    const r = regla(h.id, tiempo, lluvia);
+    const fija = fijadas.find(p => huecoDe(p) === h.id);
+    if (fija) {
+      if (!fija.ocasiones.includes(ocasion)) avisos.push(`«${fija.nombre}» no está marcada para ${OCASION[ocasion].nombre.toLowerCase()}, pero la respeto.`);
+      if (r.modo === 'no' || !r.ok(fija)) avisos.push(`«${fija.nombre}» no es la más adecuada para este tiempo; el resto del conjunto lo compensa.`);
+      cand[h.id] = [fija];
+      continue;
+    }
+    if (r.modo === 'no') { cand[h.id] = [null]; continue; }
+    let lista = activas.filter(p => huecoDe(p) === h.id && p.ocasiones.includes(ocasion) && r.ok(p));
+    if (r.preferir) {
+      const pref = lista.filter(r.preferir);
+      if (pref.length) lista = pref;
+      else if (lista.length) avisos.push(r.avisoPreferir);
+    }
+    if (r.modo === 'requerido' && !lista.length) { faltan.push(r.falta); cand[h.id] = []; continue; }
+    cand[h.id] = r.modo === 'opcional' ? [null, ...lista] : lista;
+  }
+  if (faltan.length) return { propuestas: [], avisos: [...new Set(avisos)], faltan };
+
+  const ignorarColor = fijadas.length > 1 && !coloresOk(fijadas);
+  if (ignorarColor) avisos.push('Las prendas que has fijado tienen colores llamativos distintos, así que no aplico la regla de color.');
+
+  // Todas las combinaciones posibles (o una muestra si son muchísimas)
+  const listas = HUECOS.map(h => cand[h.id]);
+  const total = listas.reduce((n, l) => n * l.length, 1);
+  const conjuntos = [];
+  if (total <= 5000) {
+    const rec = (i, acc) => {
+      if (i === listas.length) { conjuntos.push(acc.filter(Boolean)); return; }
+      for (const x of listas[i]) rec(i + 1, [...acc, x]);
+    };
+    rec(0, []);
+  } else {
+    for (let i = 0; i < 5000; i++) conjuntos.push(listas.map(l => l[Math.floor(Math.random() * l.length)]).filter(Boolean));
+  }
+
+  const porClave = Object.fromEntries(combos.map(c => [c.clave, c]));
+  const porIdComb = porId(combos);
+  const notas = {};
+  for (const e of historial) if (e.puntuacion) (notas[e.combinacion_id] = notas[e.combinacion_id] || []).push(e.puntuacion);
+  const recientes = new Set();
+  const hoy = hoyISO(), limite = haceDias(2);
+  for (const e of historial) {
+    if (e.fecha >= limite && e.fecha < hoy && porIdComb[e.combinacion_id]) porIdComb[e.combinacion_id].prendas.forEach(id => recientes.add(id));
+  }
+  const fijadasIds = new Set(fijadas.map(p => p.id));
+
+  const vistos = new Set();
+  let candidatos = [];
+  for (const items of conjuntos) {
+    const k = clave(items.map(p => p.id));
+    if (vistos.has(k)) continue;
+    vistos.add(k);
+    const c = porClave[k];
+    if (c && c.descartada) continue;
+    if (!ignorarColor && !coloresOk(items)) continue;
+
+    let w = 1;
+    if (c && c.favorita) w += 1.5;
+    const ns = c && notas[c.id];
+    if (ns && ns.length && ns.reduce((a, b) => a + b, 0) / ns.length >= 4) w += 1;
+    if (tiempo === 'frio') {
+      const ext = items.find(p => huecoDe(p) === 'exterior');
+      const med = items.find(p => huecoDe(p) === 'medio');
+      if (!med && (!ext || ext.abrigo < 3)) w *= 0.25;
+    }
+    items.forEach(p => { if (recientes.has(p.id) && !fijadasIds.has(p.id)) w *= 0.7; });
+    candidatos.push({ items: ordenar(items), clave: k, score: w * (0.35 + Math.random()) });
+  }
+
+  const sinRepetir = candidatos.filter(c => !excluir.includes(c.clave));
+  if (sinRepetir.length >= 3) candidatos = sinRepetir;
+  candidatos.sort((a, b) => b.score - a.score);
+
+  // Tres propuestas que se diferencien entre sí
+  const propuestas = [];
+  const difiere = (a, b, n) => a.items.filter(p => !b.items.some(q => q.id === p.id)).length >= n;
+  for (const minDif of [2, 1]) {
+    for (const c of candidatos) {
+      if (propuestas.length === 3) break;
+      if (propuestas.includes(c)) continue;
+      if (propuestas.every(p => difiere(c, p, minDif))) propuestas.push(c);
+    }
+  }
+
+  if (propuestas.length < 3) {
+    const libres = HUECOS
+      .filter(h => !fijadas.some(p => huecoDe(p) === h.id) && regla(h.id, tiempo, lluvia).modo === 'requerido')
+      .map(h => ({ h, n: cand[h.id].filter(Boolean).length }))
+      .sort((a, b) => a.n - b.n);
+    const llamativa = fijadas.some(p => COLOR[p.color] && !COLOR[p.color].neutro);
+    const base = propuestas.length === 0
+      ? 'No hay ningún conjunto que cumpla las reglas con estas condiciones.'
+      : `Solo ${propuestas.length === 1 ? 'sale un conjunto' : 'salen ' + propuestas.length + ' conjuntos'} con estas condiciones.`;
+    const sugerencia = libres[0] ? ` Te ayudaría tener más opciones de ${libres[0].h.nombre.toLowerCase()}${llamativa ? ' en colores neutros' : ''}.` : '';
+    avisos.push(base + sugerencia);
+  }
+  return { propuestas, avisos: [...new Set(avisos)], faltan: [] };
+}
+
+/* =================================================================
+   CONTEXTO Y DATOS
+   ================================================================= */
+const AppCtx = React.createContext(null);
+const useApp = () => React.useContext(AppCtx);
+
+function Principal({ user }) {
+  const [prendas, setPrendas] = useState([]);
+  const [combos, setCombos] = useState([]);
+  const [historial, setHistorial] = useState([]);
+  const [fotos, setFotos] = useState({});
+  const [listo, setListo] = useState(false);
+  const [errorCarga, setErrorCarga] = useState(null);
+  const [tab, setTab] = useState('hoy');
+  const [toast, setToast] = useState(null);
+  const timer = useRef();
+
+  const avisar = msg => {
+    setToast(msg);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setToast(null), 3400);
+  };
+
+  async function firmarFotos(paths) {
+    if (!paths.length) return;
+    const { data } = await sb.storage.from(BUCKET).createSignedUrls(paths, 60 * 60 * 12);
+    if (data) setFotos(f => ({ ...f, ...Object.fromEntries(data.filter(d => d.signedUrl).map(d => [d.path, d.signedUrl])) }));
+  }
+
+  async function cargar() {
+    setErrorCarga(null);
+    const [p, c, h] = await Promise.all([
+      sb.from('percha_prendas').select('*').order('created_at'),
+      sb.from('percha_combinaciones').select('*'),
+      sb.from('percha_historial').select('*').order('fecha', { ascending: false }).limit(400),
+    ]);
+    const err = p.error || c.error || h.error;
+    if (err) { setErrorCarga(err.message); return; }
+    setPrendas(p.data); setCombos(c.data); setHistorial(h.data);
+    await firmarFotos(p.data.map(x => x.foto_path).filter(Boolean));
+    setListo(true);
+  }
+  useEffect(() => { cargar(); }, []);
+
+  const prendasById = useMemo(() => porId(prendas), [prendas]);
+  const combosById = useMemo(() => porId(combos), [combos]);
+  const itemsDe = comb => comb ? ordenar(comb.prendas.map(id => prendasById[id]).filter(Boolean)) : [];
+
+  async function seguro(fn, mensajeOk) {
+    try {
+      const r = await fn();
+      if (mensajeOk) avisar(mensajeOk);
+      return r || true;
+    } catch (e) {
+      avisar((e && e.message) || 'No se pudo completar la acción.');
+      return null;
+    }
+  }
+
+  async function guardarPrenda(datos, archivo) {
+    let foto_path = datos.foto_path || null;
+    if (archivo) {
+      const blob = await redimensionar(archivo);
+      const path = `${user.id}/${crypto.randomUUID()}.jpg`;
+      const { error } = await sb.storage.from(BUCKET).upload(path, blob, { contentType: 'image/jpeg' });
+      if (error) throw error;
+      await firmarFotos([path]);
+      if (datos.foto_path) sb.storage.from(BUCKET).remove([datos.foto_path]);
+      foto_path = path;
+    }
+    const fila = {
+      nombre: datos.nombre, tipo: datos.tipo, color: datos.color, abrigo: datos.abrigo,
+      lluvia: datos.lluvia, ocasiones: datos.ocasiones, foto_path,
+    };
+    if (datos.id) {
+      const { data, error } = await sb.from('percha_prendas').update(fila).eq('id', datos.id).select().single();
+      if (error) throw error;
+      setPrendas(ps => ps.map(p => p.id === data.id ? data : p));
+      return data;
+    }
+    const { data, error } = await sb.from('percha_prendas').insert({ ...fila, user_id: user.id }).select().single();
+    if (error) throw error;
+    setPrendas(ps => [...ps, data]);
+    return data;
+  }
+
+  async function cambiarActiva(prenda, activa) {
+    const { data, error } = await sb.from('percha_prendas').update({ activa }).eq('id', prenda.id).select().single();
+    if (error) throw error;
+    setPrendas(ps => ps.map(p => p.id === data.id ? data : p));
+    return data;
+  }
+
+  async function asegurarComb(ids) {
+    const k = clave(ids);
+    const ya = combos.find(c => c.clave === k);
+    if (ya) return ya;
+    const { data, error } = await sb.from('percha_combinaciones')
+      .upsert({ user_id: user.id, clave: k, prendas: [...ids].sort() }, { onConflict: 'user_id,clave' })
+      .select().single();
+    if (error) throw error;
+    setCombos(cs => [...cs.filter(c => c.id !== data.id), data]);
+    return data;
+  }
+
+  async function actualizarComb(comb, cambios) {
+    const { data, error } = await sb.from('percha_combinaciones').update(cambios).eq('id', comb.id).select().single();
+    if (error) throw error;
+    setCombos(cs => cs.map(c => c.id === data.id ? data : c));
+    return data;
+  }
+
+  async function marcarFavorita(ids, favorita) {
+    const comb = await asegurarComb(ids);
+    return actualizarComb(comb, { favorita });
+  }
+
+  async function registrarHoy(ids, cond) {
+    const comb = await asegurarComb(ids);
+    const { data, error } = await sb.from('percha_historial').upsert({
+      user_id: user.id, fecha: hoyISO(), combinacion_id: comb.id, puntuacion: null,
+      tiempo: cond ? cond.tiempo : null, lluvia: cond ? cond.lluvia : null, ocasion: cond ? cond.ocasion : null,
+    }, { onConflict: 'user_id,fecha' }).select().single();
+    if (error) throw error;
+    setHistorial(hs => [data, ...hs.filter(h => h.id !== data.id && h.fecha !== data.fecha)].sort((a, b) => b.fecha.localeCompare(a.fecha)));
+    return data;
+  }
+
+  async function puntuar(entrada, n) {
+    const { error } = await sb.from('percha_historial').update({ puntuacion: n }).eq('id', entrada.id);
+    if (error) throw error;
+    setHistorial(hs => hs.map(h => h.id === entrada.id ? { ...h, puntuacion: n } : h));
+    const comb = combosById[entrada.combinacion_id];
+    const descartar = n === 1;
+    if (comb && comb.descartada !== descartar) {
+      await actualizarComb(comb, { descartada: descartar });
+      avisar(descartar ? 'Combinación descartada: no volverá a proponerse.' : 'Combinación recuperada.');
+    }
+  }
+
+  async function recuperar(comb) {
+    await actualizarComb(comb, { descartada: false });
+  }
+
+  const valor = {
+    user, prendas, combos, historial, fotos, prendasById, combosById, itemsDe,
+    avisar, seguro, guardarPrenda, cambiarActiva, asegurarComb, marcarFavorita,
+    registrarHoy, puntuar, recuperar, irA: setTab,
+  };
+
+  let contenido;
+  if (errorCarga) contenido = (
+    <div className="vacio"><h2>No se pudieron cargar los datos</h2><p>{errorCarga}</p>
+      <button className="btn primary" onClick={cargar}>Reintentar</button></div>
+  );
+  else if (!listo) contenido = <div className="vacio">Cargando tu armario…</div>;
+  else if (tab === 'hoy') contenido = <Hoy />;
+  else if (tab === 'armario') contenido = <Armario />;
+  else if (tab === 'historial') contenido = <Historial />;
+  else contenido = <Guardadas />;
+
+  return (
+    <AppCtx.Provider value={valor}>
+      <div className="app">
+        <Cabecera tab={tab} />
+        {contenido}
+      </div>
+      <Tabs tab={tab} setTab={t => { setTab(t); window.scrollTo(0, 0); }} />
+      {toast && <div className="toast" role="status">{toast}</div>}
+    </AppCtx.Provider>
+  );
+}
+
+/* =================================================================
+   PIEZAS COMUNES
+   ================================================================= */
+function Cabecera({ tab }) {
+  const { prendas } = useApp();
+  const titulos = { hoy: 'Hoy', armario: 'Armario', historial: 'Historial', guardadas: 'Guardadas' };
+  const activas = prendas.filter(p => p.activa).length;
+  const sub = tab === 'hoy'
+    ? capital(new Date().toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }))
+    : tab === 'armario' ? `${activas} ${activas === 1 ? 'prenda' : 'prendas'}` : null;
+  return (
+    <header className="top">
+      <div><h1>{titulos[tab]}</h1>{sub && <div className="sub">{sub}</div>}</div>
+      <button className="salir" onClick={() => sb.auth.signOut()}>Cerrar sesión</button>
+    </header>
+  );
+}
+
+function Tabs({ tab, setTab }) {
+  const items = [
+    { id: 'hoy', nombre: 'Hoy', icono: <path d="M12 7a2 2 0 1 1 2 2c-1 0-2 .6-2 1.6v.4m0 0L3 18h18l-9-7z" /> },
+    { id: 'armario', nombre: 'Armario', icono: <><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M12 3v18M9.5 11v2M14.5 11v2" /></> },
+    { id: 'historial', nombre: 'Historial', icono: <><rect x="3.5" y="5" width="17" height="15.5" rx="2" /><path d="M3.5 10h17M8 3v4M16 3v4" /></> },
+    { id: 'guardadas', nombre: 'Guardadas', icono: <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /> },
+  ];
+  return (
+    <div className="tabs"><nav aria-label="Secciones">
+      {items.map(t => (
+        <button key={t.id} aria-current={tab === t.id ? 'page' : undefined} onClick={() => setTab(t.id)}>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{t.icono}</svg>
+          {t.nombre}
+        </button>
+      ))}
+    </nav></div>
+  );
+}
+
+function Seg({ opciones, valor, onChange, label }) {
+  return (
+    <div className="seg" role="group" aria-label={label}>
+      {opciones.map(o => (
+        <button key={o.id} type="button" aria-pressed={valor === o.id} onClick={() => onChange(o.id)}>{o.nombre}</button>
+      ))}
+    </div>
+  );
+}
+
+function Chips({ opciones, valor, onChange }) {
+  return (
+    <div className="chips">
+      {opciones.map(o => (
+        <button key={o.id} type="button" className="chip" aria-pressed={valor === o.id} onClick={() => onChange(o.id)}>{o.nombre}</button>
+      ))}
+    </div>
+  );
+}
+
+function Sheet({ titulo, onClose, children }) {
+  useEffect(() => {
+    const f = e => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', f);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { window.removeEventListener('keydown', f); document.body.style.overflow = prev; };
+  }, []);
+  return (
+    <div className="sheet-bg" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="sheet" role="dialog" aria-modal="true" aria-label={titulo}>
+        <div className="sheet-cab"><h2>{titulo}</h2><button className="btn ghost small" onClick={onClose}>Cerrar</button></div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function Muestra({ p }) {
+  const { fotos } = useApp();
+  const url = p.foto_path && fotos[p.foto_path];
+  if (url) return <img src={url} alt="" loading="lazy" />;
+  return <div className="swatch" style={estiloColor(p.color)} />;
+}
+
+function Gancho() {
+  return (
+    <svg className="gancho" viewBox="0 0 76 34" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M32.5 8a5.5 5.5 0 1 1 5.5 5.5V17" />
+      <path d="M38 17 6 32.5h64z" />
+    </svg>
+  );
+}
+
+function Capa({ p }) {
+  return (
+    <div className="capa">
+      <div className="thumb"><Muestra p={p} /></div>
+      <div>
+        <div className="nom">{p.nombre}</div>
+        <div className="tip">{TIPO[p.tipo] ? TIPO[p.tipo].nombre : p.tipo}, {COLOR[p.color] ? COLOR[p.color].nombre.toLowerCase() : p.color}{p.activa ? '' : ' (retirada)'}</div>
+      </div>
+    </div>
+  );
+}
+
+function TarjetaConjunto({ items, pie }) {
+  return (
+    <article className="percha">
+      <Gancho />
+      <div className="capas">{items.map(p => <Capa key={p.id} p={p} />)}</div>
+      {pie}
+    </article>
+  );
+}
+
+function Estrellas({ valor, onChange }) {
+  return (
+    <div className="estrellas" role="group" aria-label="Puntuación">
+      {[1, 2, 3, 4, 5].map(n => (
+        <button key={n} type="button" className={n <= (valor || 0) ? 'on' : ''} aria-label={`${n} ${n === 1 ? 'estrella' : 'estrellas'}`} aria-pressed={valor === n} onClick={() => onChange(n)}>★</button>
+      ))}
+    </div>
+  );
+}
+
+function BotonGuardar({ ids, small }) {
+  const app = useApp();
+  const comb = app.combos.find(c => c.clave === clave(ids));
+  const fav = !!(comb && comb.favorita);
+  return (
+    <button className={'btn ghost' + (small ? ' small' : '')} aria-pressed={fav}
+      onClick={() => app.seguro(() => app.marcarFavorita(ids, !fav), fav ? 'Quitada de guardadas' : 'Combinación guardada')}>
+      {fav ? 'Guardada' : 'Guardar'}
+    </button>
+  );
+}
+
+function Descartada({ comb }) {
+  const app = useApp();
+  return (
+    <div className="aviso">
+      Descartada: no se volverá a proponer.{' '}
+      <button className="enlace" onClick={() => app.seguro(() => app.recuperar(comb), 'Combinación recuperada')}>Recuperar</button>
+    </div>
+  );
+}
+
+function TarjetaPrenda({ p, sel, onClick }) {
+  return (
+    <button className={'prenda' + (sel ? ' sel' : '')} aria-pressed={sel ? true : undefined} onClick={onClick}>
+      <div className="img"><Muestra p={p} /></div>
+      <div className="info"><div className="nom">{p.nombre}</div><div className="tip">{TIPO[p.tipo] ? TIPO[p.tipo].nombre : p.tipo}</div></div>
+    </button>
+  );
+}
+
+function SelectorPrenda({ onElegir, marcadas = [], hueco = null }) {
+  const { prendas } = useApp();
+  const [filtro, setFiltro] = useState(hueco || 'todo');
+  const lista = ordenar(prendas.filter(p => p.activa && (filtro === 'todo' || huecoDe(p) === filtro)));
+  return (
+    <>
+      {!hueco && <Chips opciones={[{ id: 'todo', nombre: 'Todo' }, ...HUECOS]} valor={filtro} onChange={setFiltro} />}
+      {lista.length
+        ? <div className="grid">{lista.map(p => <TarjetaPrenda key={p.id} p={p} sel={marcadas.includes(p.id)} onClick={() => onElegir(p)} />)}</div>
+        : <p className="vacio">No hay prendas en este grupo.</p>}
+    </>
+  );
+}
+
+/* =================================================================
+   HOY
+   ================================================================= */
+function Hoy() {
+  const app = useApp();
+  const { prendas, historial, combos, combosById } = app;
+  const entrada = historial.find(h => h.fecha === hoyISO());
+  const finde = [0, 6].includes(new Date().getDay());
+
+  const [tiempo, setTiempo] = useState('templado');
+  const [lluvia, setLluvia] = useState(false);
+  const [ocasion, setOcasion] = useState(finde ? 'casual' : 'trabajo');
+  const [fijadas, setFijadas] = useState([]);
+  const [res, setRes] = useState(null);
+  const [eligiendoFija, setEligiendoFija] = useState(false);
+  const [cambiando, setCambiando] = useState(false);
+
+  useEffect(() => { setRes(null); }, [tiempo, lluvia, ocasion, fijadas]);
+
+  if (!prendas.some(p => p.activa)) {
+    return (
+      <div className="vacio">
+        <h2>Tu armario está vacío</h2>
+        <p>Añade tus prendas y aquí te propondré tres conjuntos cada día.</p>
+        <button className="btn primary" onClick={() => app.irA('armario')}>Ir al armario</button>
+      </div>
+    );
+  }
+
+  if (entrada && !cambiando) {
+    const comb = combosById[entrada.combinacion_id];
+    return (
+      <>
+        <p className="intro">Hoy llevas</p>
+        <TarjetaConjunto items={app.itemsDe(comb)} pie={
+          <>
+            <div className="fila-entre">
+              <Estrellas valor={entrada.puntuacion} onChange={n => app.seguro(() => app.puntuar(entrada, n))} />
+              {comb && <BotonGuardar ids={comb.prendas} small />}
+            </div>
+            {comb && comb.descartada && <Descartada comb={comb} />}
+          </>
+        } />
+        <button className="btn ghost block" onClick={() => setCambiando(true)}>Cambiar el conjunto de hoy</button>
+      </>
+    );
+  }
+
+  const proponer = (excluir = []) => setRes(generar({ prendas, tiempo, lluvia, ocasion, fijadas, combos, historial, excluir }));
+  const fijar = p => {
+    setFijadas(f => [...f.filter(x => huecoDe(x) !== huecoDe(p) && x.id !== p.id), p].slice(-2));
+    setEligiendoFija(false);
+  };
+  const ponerme = async prop => {
+    const ok = await app.seguro(() => app.registrarHoy(prop.items.map(p => p.id), { tiempo, lluvia, ocasion }), 'Conjunto de hoy registrado');
+    if (ok) { setCambiando(false); setRes(null); setFijadas([]); window.scrollTo(0, 0); }
+  };
+
+  return (
+    <>
+      <section className="panel">
+        <div className="field">
+          <span className="lbl">Tiempo</span>
+          <Seg opciones={TIEMPOS} valor={tiempo} onChange={setTiempo} label="Tiempo" />
+          <label className="interruptor"><input type="checkbox" checked={lluvia} onChange={e => setLluvia(e.target.checked)} />Llueve</label>
+        </div>
+        <div className="field">
+          <span className="lbl">Ocasión</span>
+          <Seg opciones={OCASIONES} valor={ocasion} onChange={setOcasion} label="Ocasión" />
+        </div>
+        <div className="field">
+          <span className="lbl">Partir de una prenda</span>
+          {fijadas.map(p => (
+            <div className="fijada" key={p.id}>
+              <div className="thumb sm"><Muestra p={p} /></div>
+              <span>{p.nombre}</span>
+              <button className="quitar" aria-label={`Quitar ${p.nombre}`} onClick={() => setFijadas(f => f.filter(x => x.id !== p.id))}>×</button>
+            </div>
+          ))}
+          {fijadas.length < 2 && (
+            <button className="btn ghost small" onClick={() => setEligiendoFija(true)}>{fijadas.length ? 'Añadir otra prenda' : 'Elegir prenda'}</button>
+          )}
+          <p className="ayuda">Opcional. Hasta dos prendas que quieras llevar sí o sí.</p>
+        </div>
+        <button className="btn primary block" onClick={() => proponer()}>Proponer conjuntos</button>
+        {entrada && <button className="btn ghost block mt" onClick={() => { setCambiando(false); setRes(null); }}>Mantener el de hoy</button>}
+      </section>
+
+      {res && (
+        <>
+          {res.faltan.length > 0 && (
+            <div className="panel">
+              <h3>Falta algo en el armario</h3>
+              <p className="mt">Para estas condiciones necesitas {listaTexto(res.faltan)}. Revisa también que esas prendas estén marcadas para {OCASION[ocasion].nombre.toLowerCase()}.</p>
+            </div>
+          )}
+          {res.avisos.map((a, i) => <div className="aviso" key={i}>{a}</div>)}
+          {res.propuestas.map(p => (
+            <TarjetaConjunto key={p.clave} items={p.items} pie={
+              <div className="acciones">
+                <BotonGuardar ids={p.items.map(x => x.id)} />
+                <button className="btn primary" onClick={() => ponerme(p)}>Me pongo esta</button>
+              </div>
+            } />
+          ))}
+          {res.propuestas.length > 0 && (
+            <button className="btn ghost block" onClick={() => proponer(res.propuestas.map(p => p.clave))}>Ver otras opciones</button>
+          )}
+        </>
+      )}
+
+      {eligiendoFija && (
+        <Sheet titulo="Partir de una prenda" onClose={() => setEligiendoFija(false)}>
+          <SelectorPrenda onElegir={fijar} marcadas={fijadas.map(p => p.id)} />
+        </Sheet>
+      )}
+    </>
+  );
+}
+
+/* =================================================================
+   ARMARIO
+   ================================================================= */
+function Armario() {
+  const { prendas } = useApp();
+  const [filtro, setFiltro] = useState('todo');
+  const [editando, setEditando] = useState(null);
+  const retiradas = prendas.filter(p => !p.activa);
+  const opciones = [{ id: 'todo', nombre: 'Todo' }, ...HUECOS, ...(retiradas.length ? [{ id: 'retiradas', nombre: `Retiradas (${retiradas.length})` }] : [])];
+  const lista = ordenar(prendas.filter(p =>
+    filtro === 'retiradas' ? !p.activa : p.activa && (filtro === 'todo' || huecoDe(p) === filtro)));
+
+  return (
+    <>
+      <button className="btn primary block mb" onClick={() => setEditando('nueva')}>Añadir prenda</button>
+      <Chips opciones={opciones} valor={filtro} onChange={setFiltro} />
+      {lista.length
+        ? <div className="grid">{lista.map(p => <TarjetaPrenda key={p.id} p={p} onClick={() => setEditando(p)} />)}</div>
+        : <div className="vacio"><p>{prendas.length ? 'No hay prendas en este grupo.' : 'Empieza añadiendo la ropa que más usas: con unas pocas prendas de cada tipo ya salen combinaciones.'}</p></div>}
+      {editando && (
+        <Sheet titulo={editando === 'nueva' ? 'Nueva prenda' : 'Editar prenda'} onClose={() => setEditando(null)}>
+          <FormPrenda prenda={editando === 'nueva' ? null : editando} onHecho={() => setEditando(null)} />
+        </Sheet>
+      )}
+    </>
+  );
+}
+
+function FormPrenda({ prenda, onHecho }) {
+  const app = useApp();
+  const [d, setD] = useState(() => prenda ? { ...prenda } : { nombre: '', tipo: 'camiseta', color: 'negro', abrigo: 2, lluvia: false, ocasiones: ['casual'] });
+  const [archivo, setArchivo] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [guardando, setGuardando] = useState(false);
+
+  useEffect(() => {
+    if (!archivo) return;
+    const u = URL.createObjectURL(archivo);
+    setPreview(u);
+    return () => URL.revokeObjectURL(u);
+  }, [archivo]);
+
+  const set = (k, v) => setD(x => ({ ...x, [k]: v }));
+  const toggleOcasion = id => set('ocasiones', d.ocasiones.includes(id) ? d.ocasiones.filter(x => x !== id) : [...d.ocasiones, id]);
+  const fotoActual = preview || (d.foto_path && app.fotos[d.foto_path]);
+  const nombreAuto = `${TIPO[d.tipo].nombre} ${COLOR[d.color].nombre.toLowerCase()}`;
+
+  const guardar = async () => {
+    setGuardando(true);
+    const ok = await app.seguro(() => app.guardarPrenda({ ...d, nombre: d.nombre.trim() || nombreAuto }, archivo), prenda ? 'Prenda actualizada' : 'Prenda añadida');
+    setGuardando(false);
+    if (ok) onHecho();
+  };
+  const activar = async activa => {
+    const ok = await app.seguro(() => app.cambiarActiva(prenda, activa), activa ? 'Prenda devuelta al armario' : 'Prenda retirada del armario');
+    if (ok) onHecho();
+  };
+
+  return (
+    <>
+      <div className="foto-edit">
+        <div className="foto-prev">{fotoActual ? <img src={fotoActual} alt="" /> : <div className="swatch" style={estiloColor(d.color)} />}</div>
+        <label className="btn ghost small">
+          {fotoActual ? 'Cambiar foto' : 'Añadir foto'}
+          <input type="file" accept="image/*" hidden onChange={e => e.target.files[0] && setArchivo(e.target.files[0])} />
+        </label>
+      </div>
+
+      <div className="field">
+        <label className="lbl" htmlFor="f-nombre">Nombre</label>
+        <input id="f-nombre" type="text" value={d.nombre} placeholder={nombreAuto} onChange={e => set('nombre', e.target.value)} />
+        <p className="ayuda">Si lo dejas vacío se llamará «{nombreAuto}».</p>
+      </div>
+
+      <div className="field">
+        <label className="lbl" htmlFor="f-tipo">Tipo</label>
+        <select id="f-tipo" value={d.tipo} onChange={e => set('tipo', e.target.value)}>
+          {HUECOS.map(h => (
+            <optgroup key={h.id} label={h.nombre}>
+              {TIPOS.filter(t => t.hueco === h.id).map(t => <option key={t.id} value={t.id}>{t.nombre}</option>)}
+            </optgroup>
+          ))}
+        </select>
+      </div>
+
+      <div className="field">
+        <span className="lbl">Color principal</span>
+        <div className="colores" role="group" aria-label="Color principal">
+          {COLORES.map(c => (
+            <button key={c.id} type="button" title={c.nombre} aria-label={c.nombre} aria-pressed={d.color === c.id} style={estiloColor(c.id)} onClick={() => set('color', c.id)} />
+          ))}
+        </div>
+        <p className="tip color-nom">{COLOR[d.color].nombre}{COLOR[d.color].neutro ? ', neutro' : ', llamativo'}</p>
+      </div>
+
+      <div className="field">
+        <span className="lbl">Abrigo</span>
+        <Seg opciones={ABRIGOS} valor={d.abrigo} onChange={v => set('abrigo', v)} label="Abrigo" />
+        <label className="interruptor"><input type="checkbox" checked={d.lluvia} onChange={e => set('lluvia', e.target.checked)} />Sirve para lluvia</label>
+      </div>
+
+      <div className="field">
+        <span className="lbl">Ocasiones</span>
+        <div className="chips">
+          {OCASIONES.map(o => (
+            <button key={o.id} type="button" className="chip" aria-pressed={d.ocasiones.includes(o.id)} onClick={() => toggleOcasion(o.id)}>{o.nombre}</button>
+          ))}
+        </div>
+        {!d.ocasiones.length && <p className="error">Marca al menos una ocasión.</p>}
+      </div>
+
+      <button className="btn primary block" disabled={guardando || !d.ocasiones.length} onClick={guardar}>{guardando ? 'Guardando…' : 'Guardar prenda'}</button>
+      {prenda && (prenda.activa
+        ? <button className="btn ghost block mt danger" onClick={() => activar(false)}>Retirar del armario</button>
+        : <button className="btn ghost block mt" onClick={() => activar(true)}>Volver al armario</button>)}
+      {prenda && prenda.activa && <p className="ayuda">Las prendas retiradas dejan de proponerse, pero siguen apareciendo en tu historial.</p>}
+    </>
+  );
+}
+
+/* =================================================================
+   HISTORIAL
+   ================================================================= */
+function Historial() {
+  const app = useApp();
+  const { historial, combosById } = app;
+  if (!historial.length) {
+    return (
+      <div className="vacio">
+        <h2>Aún no hay historial</h2>
+        <p>Cuando elijas un conjunto en Hoy, aparecerá aquí para que puedas puntuarlo.</p>
+      </div>
+    );
+  }
+  return historial.map(e => {
+    const comb = combosById[e.combinacion_id];
+    if (!comb) return null;
+    const items = app.itemsDe(comb);
+    const cond = e.tiempo
+      ? `${TIEMPO[e.tiempo] ? TIEMPO[e.tiempo].nombre : e.tiempo}${e.lluvia ? ' con lluvia' : ''}, ${OCASION[e.ocasion] ? OCASION[e.ocasion].nombre.toLowerCase() : ''}`
+      : null;
+    return (
+      <article className="panel" key={e.id}>
+        <div className="hist-cab"><h3>{fechaLarga(e.fecha)}</h3>{cond && <span className="tip">{cond}</span>}</div>
+        <div className="mini">{items.map(p => <div className="thumb sm" key={p.id} title={p.nombre}><Muestra p={p} /></div>)}</div>
+        <p className="tip">{items.map(p => p.nombre).join(', ')}</p>
+        <div className="fila-entre">
+          <Estrellas valor={e.puntuacion} onChange={n => app.seguro(() => app.puntuar(e, n))} />
+          <BotonGuardar ids={comb.prendas} small />
+        </div>
+        {comb.descartada && <Descartada comb={comb} />}
+      </article>
+    );
+  });
+}
+
+/* =================================================================
+   GUARDADAS
+   ================================================================= */
+function Guardadas() {
+  const app = useApp();
+  const [creando, setCreando] = useState(false);
+  const favoritas = app.combos.filter(c => c.favorita);
+  const descartadas = app.combos.filter(c => c.descartada);
+  const media = id => {
+    const ns = app.historial.filter(h => h.combinacion_id === id && h.puntuacion).map(h => h.puntuacion);
+    return ns.length ? { m: ns.reduce((a, b) => a + b, 0) / ns.length, n: ns.length } : null;
+  };
+
+  return (
+    <>
+      <button className="btn primary block mb" onClick={() => setCreando(true)}>Crear una combinación</button>
+      {!favoritas.length && (
+        <div className="vacio"><p>Guarda las propuestas que te gusten o crea tus propias combinaciones. Las guardadas aparecen más a menudo en las propuestas.</p></div>
+      )}
+      {favoritas.map(c => {
+        const st = media(c.id);
+        return (
+          <TarjetaConjunto key={c.id} items={app.itemsDe(c)} pie={
+            <>
+              {st && <p className="tip mt">Media de {st.m.toFixed(1).replace('.', ',')} sobre 5, puesta {st.n} {st.n === 1 ? 'vez' : 'veces'}</p>}
+              <div className="acciones">
+                <button className="btn ghost" onClick={() => app.seguro(() => app.marcarFavorita(c.prendas, false), 'Quitada de guardadas')}>Quitar</button>
+                <button className="btn primary" onClick={() => app.seguro(() => app.registrarHoy(c.prendas, null), 'Conjunto de hoy registrado')}>Ponérmela hoy</button>
+              </div>
+            </>
+          } />
+        );
+      })}
+      {descartadas.length > 0 && (
+        <details className="panel">
+          <summary>Descartadas ({descartadas.length})</summary>
+          {descartadas.map(c => (
+            <div className="desc-fila" key={c.id}>
+              <div className="mini">{app.itemsDe(c).map(p => <div className="thumb sm" key={p.id} title={p.nombre}><Muestra p={p} /></div>)}</div>
+              <button className="btn ghost small" onClick={() => app.seguro(() => app.recuperar(c), 'Combinación recuperada')}>Recuperar</button>
+            </div>
+          ))}
+        </details>
+      )}
+      {creando && (
+        <Sheet titulo="Nueva combinación" onClose={() => setCreando(false)}>
+          <Constructor onHecho={() => setCreando(false)} />
+        </Sheet>
+      )}
+    </>
+  );
+}
+
+function Constructor({ onHecho }) {
+  const app = useApp();
+  const [sel, setSel] = useState({});
+  const [eligiendo, setEligiendo] = useState(null);
+  const elegidas = Object.values(sel).filter(Boolean);
+  const ids = elegidas.map(p => p.id);
+
+  if (eligiendo) {
+    return (
+      <>
+        <button className="btn ghost small mb" onClick={() => setEligiendo(null)}>Volver</button>
+        <h3 className="mb">{HUECO[eligiendo].nombre}</h3>
+        <SelectorPrenda hueco={eligiendo} marcadas={ids} onElegir={p => { setSel(s => ({ ...s, [eligiendo]: p })); setEligiendo(null); }} />
+      </>
+    );
+  }
+
+  const guardar = async () => {
+    const ok = await app.seguro(() => app.marcarFavorita(ids, true), 'Combinación guardada');
+    if (ok) onHecho();
+  };
+
+  return (
+    <>
+      <div className="capas">
+        {HUECOS.map(h => (
+          <div className="capa" key={h.id}>
+            <div className="thumb">{sel[h.id] && <Muestra p={sel[h.id]} />}</div>
+            <div className="fila-entre" style={{ marginTop: 0 }}>
+              <div><div className="nom">{h.nombre}</div><div className="tip">{sel[h.id] ? sel[h.id].nombre : 'Sin elegir'}</div></div>
+              <div style={{ display: 'flex', gap: 6 }}>
+                {sel[h.id] && <button className="btn ghost small" onClick={() => setSel(s => ({ ...s, [h.id]: null }))}>Quitar</button>}
+                <button className="btn ghost small" onClick={() => setEligiendo(h.id)}>Elegir</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      {elegidas.length > 1 && !coloresOk(elegidas) && (
+        <div className="aviso">Esta combinación no cumple la regla de color, pero puedes guardarla igualmente.</div>
+      )}
+      <button className="btn primary block mt" disabled={ids.length < 2} onClick={guardar}>Guardar combinación</button>
+      {ids.length < 2 && <p className="ayuda">Elige al menos dos prendas.</p>}
+    </>
+  );
+}
+
+/* =================================================================
+   ACCESO
+   ================================================================= */
+function Login() {
+  const [email, setEmail] = useState('');
+  const [pass, setPass] = useState('');
+  const [error, setError] = useState(null);
+  const [cargando, setCargando] = useState(false);
+  const entrar = async e => {
+    e.preventDefault();
+    setCargando(true); setError(null);
+    const { error } = await sb.auth.signInWithPassword({ email: email.trim(), password: pass });
+    setCargando(false);
+    if (error) setError(error.message === 'Invalid login credentials' ? 'El correo o la contraseña no son correctos.' : error.message);
+  };
+  return (
+    <main className="login">
+      <h1>Percha</h1>
+      <p>Tu ropa, combinada cada mañana.</p>
+      <form onSubmit={entrar}>
+        <div className="field"><label className="lbl" htmlFor="l-email">Correo</label>
+          <input id="l-email" type="email" autoComplete="email" value={email} onChange={e => setEmail(e.target.value)} required /></div>
+        <div className="field"><label className="lbl" htmlFor="l-pass">Contraseña</label>
+          <input id="l-pass" type="password" autoComplete="current-password" value={pass} onChange={e => setPass(e.target.value)} required /></div>
+        {error && <p className="error">{error}</p>}
+        <button className="btn primary block" disabled={cargando}>{cargando ? 'Entrando…' : 'Entrar'}</button>
+      </form>
+    </main>
+  );
+}
+
+function SinConfig() {
+  return (
+    <main className="login">
+      <h1>Percha</h1>
+      <p>Falta conectar Supabase. Abre index.html y pon la URL del proyecto y la clave anon en SUPABASE_URL y SUPABASE_ANON_KEY, al principio del script.</p>
+    </main>
+  );
+}
+
+function App() {
+  const [session, setSession] = useState(null);
+  const [cargando, setCargando] = useState(configurado);
+  useEffect(() => {
+    if (!sb) return;
+    sb.auth.getSession().then(({ data }) => { setSession(data.session); setCargando(false); });
+    const { data: { subscription } } = sb.auth.onAuthStateChange((_e, s) => setSession(s));
+    return () => subscription.unsubscribe();
+  }, []);
+  if (!configurado) return <SinConfig />;
+  if (cargando) return <div className="vacio">Cargando…</div>;
+  if (!session) return <Login />;
+  return <Principal key={session.user.id} user={session.user} />;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
